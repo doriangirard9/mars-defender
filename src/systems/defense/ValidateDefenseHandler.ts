@@ -7,8 +7,6 @@ import EventManager from "../../EventManager.ts";
 // components
 import Click from "../../components/core/Click.ts";
 import Tag from "../../components/core/Tag.ts";
-import Sprite from "../../components/core/Sprite.ts";
-import Text from "../../components/core/Text.ts";
 
 export default class ValidateDefenseHandler implements ISystem {
     entityManger: EntityManager;
@@ -27,25 +25,23 @@ export default class ValidateDefenseHandler implements ISystem {
     }
 
     OnNewEntity(entity: Entity): void {
-        if (entity.hasComponents(["Tag", "Click", "Sprite", "Text"])) {
+        if (entity.hasComponents(["Tag", "Click"])) {
             const tagComponent: Tag = entity.getComponent("Tag") as Tag;
             const clickComponent: Click = entity.getComponent("Click") as Click;
-            const spriteComponent: Sprite = entity.getComponent("Sprite") as Sprite;
-            const textComponent: Text = entity.getComponent("Text") as Text;
 
             if (tagComponent.tag !== "buttonValidateDefense") {
                 return;
             }
 
             clickComponent.onPointerDown.push((): void => {
-                this.validateDefense(entity, spriteComponent, textComponent);
+                this.validateDefense(entity);
             });
         }
     }
 
     update(deltaTime: number): void {}
 
-    validateDefense(entity: Entity, spriteComponent: Sprite, textComponent: Text): void {
+    validateDefense(entity: Entity): void {
         this.entityManger.removeEntity(entity);
     }
 }
