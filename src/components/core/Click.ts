@@ -4,11 +4,14 @@ export default class Click implements IComponent {
     entity: Entity;
     name: string = "Click";
 
-    isClicked: boolean = false;
+    onPointerDown: Function[] = [];
+    onPointerUp: Function[] = [];
 
     constructor(
         entity: Entity
     ) {
         this.entity = entity;
     }
+
+    destroy(): void {}
 }

@@ -1,5 +1,7 @@
 import {Entity, ISystem} from "../../ecsModels.ts";
 import * as PIXI from "pixi.js";
+import EntityManager from "../../EntityManager.ts";
+import EventManager from "../../EventManager.ts";
 import Game from "../../Game.ts";
 
 // components
@@ -7,38 +9,37 @@ import Sprite from "../../components/core/Sprite.ts";
 import Transform from "../../components/core/Transform.ts";
 
 export default class SpriteRenderer implements ISystem {
-    game: Game;
+    eventManager: EventManager;
+    entityManger: EntityManager;
     app: PIXI.Application;
 
     constructor() {
-        this.game = Game.getInstance();
-        this.app = this.game.app;
+        this.eventManager = EventManager.getInstance();
+        this.entityManger = EntityManager.getInstance();
+        this.app = Game.getInstance().app;
         this.subscribeToEvents();
     }
 
     subscribeToEvents(): void {
-        this.game.eventManager.subscribe("OnNewEntity", this.OnNewEntity.bind(this));
+        this.eventManager.subscribe("OnNewEntity", this.OnNewEntity.bind(this));
     }
 
     OnNewEntity(entity: Entity): void {
-        if (this.checkComponents(entity)) {
+        if (entity.hasComponents(["Sprite", "Transform"])) {
             const spriteComponent: Sprite = entity.getComponent("Sprite") as Sprite;
             const transformComponent: Transform = entity.getComponent("Transform") as Transform;
 
-            spriteComponent.sprite.anchor.set(0.5, 0.5);
-
+            this.setSpriteAnchor(spriteComponent);
             this.setSpritePosition(spriteComponent, transformComponent);
             this.setSpriteRotation(spriteComponent, transformComponent);
-            this.setSpriteScale(spriteComponent, transformComponent);
+            this.setSpriteScale(spriteComponent);
 
             this.app.stage.addChild(spriteComponent.sprite);
         }
     }
 
     update(deltaTime: number): void {
-        const entities: Entity[] = this.game.entities.filter((entity: Entity): boolean => {
-            return this.checkComponents(entity);
-        });
+        const entities: Entity[] = this.entityManger.getEntitiesWithComponents(["Sprite", "Transform"]);
 
         // update all sprites
         entities.forEach((entity: Entity): void => {
@@ -47,12 +48,12 @@ export default class SpriteRenderer implements ISystem {
 
             this.setSpritePosition(spriteComponent, transformComponent);
             this.setSpriteRotation(spriteComponent, transformComponent);
-            this.setSpriteScale(spriteComponent, transformComponent);
+            this.setSpriteScale(spriteComponent);
         });
     }
 
-    checkComponents(entity: Entity): boolean {
-        return entity.hasComponent("Sprite") && entity.hasComponent("Transform");
+    setSpriteAnchor(spriteComponent: Sprite): void {
+        spriteComponent.sprite.anchor.set(spriteComponent.anchor.x, spriteComponent.anchor.y);
     }
 
     setSpritePosition(spriteComponent: Sprite, transformComponent: Transform): void {
@@ -64,7 +65,7 @@ export default class SpriteRenderer implements ISystem {
         spriteComponent.sprite.rotation = transformComponent.rotation;
     }
 
-    setSpriteScale(spriteComponent: Sprite, transformComponent: Transform): void {
-        spriteComponent.sprite.scale.set(transformComponent.scale.x, transformComponent.scale.y);
+    setSpriteScale(spriteComponent: Sprite): void {
+        spriteComponent.sprite.scale.set(spriteComponent.scale.x, spriteComponent.scale.y);
     }
 }

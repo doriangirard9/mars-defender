@@ -1,24 +1,24 @@
 import {Entity, ISystem} from "../../ecsModels.ts";
-import Game from "../../Game.ts";
 
 // components
 import Sprite from "../../components/core/Sprite.ts";
 import Drag from "../../components/core/Drag.ts";
+import EventManager from "../../EventManager.ts";
 
 export default class DragHandler implements ISystem {
-    game: Game;
+    eventManager: EventManager;
 
     constructor() {
-        this.game = Game.getInstance();
+        this.eventManager = EventManager.getInstance();
         this.subscribeToEvents();
     }
 
     subscribeToEvents(): void {
-        this.game.eventManager.subscribe("OnNewEntity", this.OnNewEntity.bind(this));
+        this.eventManager.subscribe("OnNewEntity", this.OnNewEntity.bind(this));
     }
 
     OnNewEntity(entity: Entity): void {
-        if (this.checkComponents(entity)) {
+        if (entity.hasComponents(["Drag", "Sprite"])) {
             const spriteComponent: Sprite = entity.getComponent("Sprite") as Sprite;
             const dragComponent: Drag = entity.getComponent("Drag") as Drag;
 
@@ -38,19 +38,15 @@ export default class DragHandler implements ISystem {
             });
 
             spriteComponent.sprite.on('globalpointermove', (event: any): void => {
-                if (dragComponent.isDragged) {
-                    dragComponent.movement.x += event.data.originalEvent.movementX;
-                    dragComponent.movement.y += event.data.originalEvent.movementY;
+                if (!dragComponent.isDragged) {
+                    return;
                 }
+                dragComponent.onPointerMove.forEach((listener: Function): void => {
+                    listener(event);
+                });
             });
         }
     }
 
     update(deltaTime: number): void {}
-
-    checkComponents(entity: Entity): boolean {
-        return entity.hasComponent("Drag")
-            && entity.hasComponent("Sprite")
-            && entity.hasComponent("Transform");
-    }
 }

@@ -1,53 +1,60 @@
 import {Entity, ISystem} from "../../ecsModels.ts";
-import Game from "../../Game.ts";
+import EntityManager from "../../EntityManager.ts";
+import EventManager from "../../EventManager.ts";
 
 // components
 import Transform from "../../components/core/Transform.ts";
 import LinkTransform from "../../components/core/LinkTransform.ts";
 
 export default class LinkTransformHandler implements ISystem {
-    game: Game;
+    entityManager: EntityManager;
+    eventManager: EventManager;
 
     constructor() {
-        this.game = Game.getInstance();
+        this.entityManager = EntityManager.getInstance();
+        this.eventManager = EventManager.getInstance();
         this.subscribeToEvents();
     }
 
     subscribeToEvents(): void {
-        this.game.eventManager.subscribe("OnNewEntity", this.OnNewEntity.bind(this));
+        this.eventManager.subscribe("OnNewEntity", this.OnNewEntity.bind(this));
     }
 
     OnNewEntity(entity: Entity): void {
-        if (this.checkComponents(entity)) {
+        if (entity.hasComponents(["Transform", "LinkTransform"])) {
             const transformComponent: Transform = entity.getComponent("Transform") as Transform;
             const linkTransformComponent: LinkTransform = entity.getComponent("LinkTransform") as LinkTransform;
 
-            if (linkTransformComponent.transform !== null) {
-                this.setTransformPosition(linkTransformComponent, transformComponent);
+            const entityToLink: Entity | undefined = this.entityManager.getEntityById(linkTransformComponent.entityID);
+
+            if (entityToLink) {
+                const entityTransformComponent: Transform = entityToLink.getComponent("Transform") as Transform;
+                this.setTransformPosition(entityTransformComponent, transformComponent, linkTransformComponent);
             }
         }
     }
 
     update(deltaTime: number): void {
-        const entities: Entity[] = this.game.entities.filter((entity: Entity): boolean => {
-            return this.checkComponents(entity);
-        });
+        const entities: Entity[] = this.entityManager.getEntitiesWithComponents(["Transform", "LinkTransform"]);
 
         entities.forEach((entity: Entity): void => {
             const transformComponent: Transform = entity.getComponent("Transform") as Transform;
             const linkTransformComponent: LinkTransform = entity.getComponent("LinkTransform") as LinkTransform;
 
-            if (linkTransformComponent.transform !== null) {
-                this.setTransformPosition(linkTransformComponent, transformComponent);
+            const entityToLink: Entity | undefined = this.entityManager.getEntityById(linkTransformComponent.entityID);
+
+            if (entityToLink) {
+                const entityTransformComponent: Transform = entityToLink.getComponent("Transform") as Transform;
+                this.setTransformPosition(entityTransformComponent, transformComponent, linkTransformComponent);
             }
         });
     }
 
-    checkComponents(entity: Entity): boolean {
-        return entity.hasComponent("Transform") && entity.hasComponent("LinkTransform");
+    setTransformPosition(sourceTransform: Transform, linkedTransform: Transform, linkTransformComponent: LinkTransform): void {
+        linkedTransform.position = sourceTransform.position.add(linkTransformComponent.offset);
     }
 
-    setTransformPosition(sourceTransform: LinkTransform, linkedTransform: Transform): void {
-        linkedTransform.position = sourceTransform.transform.position.add(sourceTransform.offset);
+    setTransformRotation(sourceTransform: LinkTransform, linkedTransform: Transform): void {
+        // TODO
     }
 }

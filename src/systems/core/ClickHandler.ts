@@ -1,24 +1,24 @@
 import {Entity, ISystem} from "../../ecsModels.ts";
-import Game from "../../Game.ts";
+import EventManager from "../../EventManager.ts";
 
 // components
 import Sprite from "../../components/core/Sprite.ts";
 import Click from "../../components/core/Click.ts";
 
 export default class ClickHandler implements ISystem {
-    game: Game;
+    eventManager: EventManager;
 
     constructor() {
-        this.game = Game.getInstance();
+        this.eventManager = EventManager.getInstance();
         this.subscribeToEvents();
     }
 
     subscribeToEvents(): void {
-        this.game.eventManager.subscribe("OnNewEntity", this.OnNewEntity.bind(this));
+        this.eventManager.subscribe("OnNewEntity", this.OnNewEntity.bind(this));
     }
 
     OnNewEntity(entity: Entity): void {
-        if (this.checkComponents(entity)) {
+        if (entity.hasComponents(["Click", "Sprite"])) {
             const spriteComponent: Sprite = entity.getComponent("Sprite") as Sprite;
             const clickComponent: Click = entity.getComponent("Click") as Click;
 
@@ -26,22 +26,18 @@ export default class ClickHandler implements ISystem {
             spriteComponent.sprite.cursor = 'pointer';
 
             spriteComponent.sprite.on('pointerdown', (): void => {
-                clickComponent.isClicked = true;
+                clickComponent.onPointerDown.forEach((listener: Function): void => {
+                    listener();
+                });
             });
 
             spriteComponent.sprite.on('pointerup', (): void => {
-                clickComponent.isClicked = false;
-            });
-
-            spriteComponent.sprite.on('pointerupoutside', (): void => {
-                clickComponent.isClicked = false;
+                clickComponent.onPointerUp.forEach((listener: Function): void => {
+                    listener();
+                });
             });
         }
     }
 
     update(deltaTime: number): void {}
-
-    checkComponents(entity: Entity): boolean {
-        return entity.hasComponent("Click") && entity.hasComponent("Sprite");
-    }
 }

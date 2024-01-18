@@ -1,6 +1,7 @@
 export interface IComponent {
     name: string;
     entity: Entity;
+    destroy(...args: any[]): void;
 }
 
 export class Entity {
@@ -15,12 +16,19 @@ export class Entity {
         this.components.set(component.name, component);
     }
 
-    removeComponent(component: IComponent): void {
-        this.components.delete(component.name);
+    removeComponent(name: string): void {
+        this.components.get(name)?.destroy();
+        this.components.delete(name);
     }
 
     hasComponent(componentName: string): boolean {
         return this.components.has(componentName);
+    }
+
+    hasComponents(componentNames: string[]): boolean {
+        return componentNames.every((componentName: string): boolean => {
+            return this.hasComponent(componentName);
+        });
     }
 
     getComponent(componentName: string): IComponent {

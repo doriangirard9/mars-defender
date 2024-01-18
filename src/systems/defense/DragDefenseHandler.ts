@@ -1,5 +1,6 @@
 import {Entity, ISystem} from "../../ecsModels.ts";
-import Game from "../../Game.ts";
+import EntityManager from "../../EntityManager.ts";
+import EventManager from "../../EventManager.ts";
 
 // components
 import Tag from "../../components/core/Tag.ts";
@@ -7,18 +8,21 @@ import Transform from "../../components/core/Transform.ts";
 import Drag from "../../components/core/Drag.ts";
 
 export default class DragDefenseHandler implements ISystem {
-    game: Game;
+    entityManger: EntityManager;
+    eventManager: EventManager;
 
     constructor() {
-        this.game = Game.getInstance();
+        this.entityManger = EntityManager.getInstance();
+        this.eventManager = EventManager.getInstance();
+        this.subscribeToEvents();
     }
 
-    update(deltaTime: number): void {
-        const entities: Entity[] = this.game.entities.filter((entity: Entity): boolean => {
-            return this.checkComponents(entity);
-        });
+    subscribeToEvents(): void {
+        this.eventManager.subscribe("OnNewEntity", this.OnNewEntity.bind(this));
+    }
 
-        entities.forEach((entity: Entity): void => {
+    OnNewEntity(entity: Entity): void {
+        if (entity.hasComponents(["Drag", "Tag", "Transform"])) {
             const tagComponent: Tag = entity.getComponent("Tag") as Tag;
             const dragComponent: Drag = entity.getComponent("Drag") as Drag;
             const transformComponent: Transform = entity.getComponent("Transform") as Transform;
@@ -27,17 +31,16 @@ export default class DragDefenseHandler implements ISystem {
                 return;
             }
 
-            if (dragComponent.isDragged) {
-                transformComponent.position = transformComponent.position.add(dragComponent.movement);
-                dragComponent.movement.x = 0;
-                dragComponent.movement.y = 0;
-            }
-        });
+            dragComponent.onPointerMove.push((event: any): void => {
+                this.OnDefenseDragged(event, transformComponent);
+            });
+        }
     }
 
-    checkComponents(entity: Entity): boolean {
-        return entity.hasComponent("Drag")
-            && entity.hasComponent("Transform")
-            && entity.hasComponent("Tag");
+    update(deltaTime: number): void {}
+
+    OnDefenseDragged(event: any, transformComponent: Transform): void {
+        transformComponent.position.x += event.data.originalEvent.movementX;
+        transformComponent.position.y += event.data.originalEvent.movementY;
     }
 }

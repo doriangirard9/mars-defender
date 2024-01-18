@@ -2,7 +2,8 @@ import * as PIXI from 'pixi.js';
 
 import { ISystem, Entity } from "./ecsModels.ts";
 import Vector2 from "./utils/Vector2.ts";
-import EventManager from "./utils/EventManager.ts";
+import EventManager from "./EventManager.ts";
+import EntityManager from "./EntityManager.ts";
 
 // components
 import Transform from "./components/core/Transform.ts";
@@ -19,14 +20,15 @@ import CreateDefenseHandler from "./systems/defense/CreateDefenseHandler.ts";
 import DragHandler from "./systems/core/DragHandler.ts";
 import DragDefenseHandler from "./systems/defense/DragDefenseHandler.ts";
 import LinkTransformHandler from "./systems/core/LinkTransformHandler.ts";
+import ValidateDefenseHandler from "./systems/defense/ValidateDefenseHandler.ts";
 
 export default class Game {
     private static instance: Game;
 
     // game variables
-    entities: Entity[] = [];
     systems: ISystem[] = [];
     eventManager: EventManager = EventManager.getInstance();
+    entityManager: EntityManager = EntityManager.getInstance();
 
     // PIXI
     app!: PIXI.Application;
@@ -52,6 +54,7 @@ export default class Game {
         this.systems.push(new TextRendererSystem());
         this.systems.push(new ClickHandler());
         this.systems.push(new CreateDefenseHandler());
+        this.systems.push(new ValidateDefenseHandler());
         this.systems.push(new DragHandler());
         this.systems.push(new DragDefenseHandler());
 
@@ -59,25 +62,20 @@ export default class Game {
         for (let i = 0; i < 10; i++) {
             for (let j = 0; j < 10; j++) {
                 const entity: Entity = new Entity();
-                entity.addComponent(new Transform(entity, new Vector2(100 + i * 53, 100 + j * 53), new Vector2(0.2, 0.2)));
-                entity.addComponent(new Sprite(entity, PIXI.Sprite.from("img/marsGround.png")));
-                this.addEntity(entity);
+                entity.addComponent(new Transform(entity, new Vector2(100 + i * 53, 100 + j * 53)));
+                entity.addComponent(new Sprite(entity, PIXI.Sprite.from("img/marsGround.png"), new Vector2(0.2, 0.2)));
+                this.entityManager.addEntity(entity);
             }
         }
 
         // create defense button
         const defenseButton: Entity = new Entity();
-        defenseButton.addComponent(new Transform(defenseButton, new Vector2(100, 100), new Vector2(0.05, 0.05)));
-        defenseButton.addComponent(new Sprite(defenseButton, PIXI.Sprite.from("img/button.png")));
+        defenseButton.addComponent(new Transform(defenseButton, new Vector2(100, 100)));
+        defenseButton.addComponent(new Sprite(defenseButton, PIXI.Sprite.from("img/button.png"), new Vector2(0.05, 0.05)));
         defenseButton.addComponent(new Click(defenseButton));
         defenseButton.addComponent(new Tag(defenseButton, "buttonCreateDefense"));
-        this.addEntity(defenseButton);
-
-        // create text button
-        const defenseText: Entity = new Entity();
-        defenseText.addComponent(new Text(defenseText, new PIXI.Text("Create defense")));
-        defenseText.addComponent(new Transform(defenseText, new Vector2(100, 100), new Vector2(0.5, 0.5)));
-        this.addEntity(defenseText);
+        defenseButton.addComponent(new Text(defenseButton, new PIXI.Text("Create defense"), new Vector2(0.5, 0.5)));
+        this.entityManager.addEntity(defenseButton);
 
         requestAnimationFrame(this.update.bind(this));
     }
@@ -112,16 +110,5 @@ export default class Game {
         this.lastTime = time;
 
         return deltaTime;
-    }
-
-    addEntity(entity: Entity): void {
-        this.entities.push(entity);
-        this.eventManager.notify("OnNewEntity", entity);
-    }
-
-    removeEntity(entity: Entity): void {
-        this.entities = this.entities.filter((e: Entity): boolean => {
-            return e !== entity;
-        });
     }
 }
