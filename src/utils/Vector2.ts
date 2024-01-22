@@ -38,4 +38,12 @@ export default class Vector2 {
         }
         return this;
     }
+
+    equals(vector: Vector2): boolean {
+        return this.x === vector.x && this.y === vector.y;
+    }
+
+    dist(vector: Vector2): number {
+        return Math.sqrt(Math.pow(this.x - vector.x, 2) + Math.pow(this.y - vector.y, 2));
+    }
 }

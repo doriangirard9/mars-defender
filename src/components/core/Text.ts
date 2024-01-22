@@ -8,18 +8,17 @@ export default class Text implements IComponent {
 
     value: PIXI.Text;
     scale: Vector2;
+    color: string;
 
     constructor(
         entity: Entity,
         value: PIXI.Text,
-        scale: Vector2 = new Vector2(1, 1)
+        scale: Vector2 = new Vector2(1, 1),
+        color: string = "white"
     ) {
         this.entity = entity;
         this.value = value;
         this.scale = scale;
-    }
-
-    destroy(): void {
-        this.value.destroy();
+        this.color = color;
     }
 }

@@ -9,20 +9,19 @@ export default class Sprite implements IComponent {
     sprite: PIXI.Sprite;
     scale: Vector2;
     anchor: Vector2;
+    rotationOffset: number;
 
     constructor(
         entity: Entity,
         sprite: PIXI.Sprite,
         scale: Vector2 = new Vector2(1, 1),
-        anchor: Vector2 = new Vector2(0.5, 0.5)
+        anchor: Vector2 = new Vector2(0.5, 0.5),
+        rotationOffset: number = 0
     ) {
         this.entity = entity;
         this.sprite = sprite;
         this.scale = scale;
         this.anchor = anchor;
-    }
-
-    destroy(): void {
-        this.sprite.destroy();
+        this.rotationOffset = rotationOffset;
     }
 }

@@ -1,7 +1,6 @@
 export interface IComponent {
     name: string;
     entity: Entity;
-    destroy(...args: any[]): void;
 }
 
 export class Entity {
@@ -17,7 +16,6 @@ export class Entity {
     }
 
     removeComponent(name: string): void {
-        this.components.get(name)?.destroy();
         this.components.delete(name);
     }
 

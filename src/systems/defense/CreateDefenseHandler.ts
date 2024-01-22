@@ -1,70 +1,63 @@
 import {Entity, ISystem} from "../../ecsModels.ts";
 import * as PIXI from "pixi.js";
 import Vector2 from "../../utils/Vector2.ts";
-import EntityManager from "../../EntityManager.ts";
-import EventManager from "../../EventManager.ts";
-import {SpriteLayer} from "../../models/models.ts";
+import EntityManager from "../../managers/EntityManager.ts";
+import EventManager from "../../managers/EventManager.ts";
+import {SpriteLayer, IDefense} from "../../models/models.ts";
+import {getDefenseData} from "../../models/models.ts";
 
 // components
 import Click from "../../components/core/Click.ts";
 import Tag from "../../components/core/Tag.ts";
 import Sprite from "../../components/core/Sprite.ts";
 import Transform from "../../components/core/Transform.ts";
-import Drag from "../../components/core/Drag.ts";
-import LinkTransform from "../../components/core/LinkTransform.ts";
+import Parent from "../../components/core/Parent.ts";
 import Text from "../../components/core/Text.ts";
-import Defense from "../../components/Defense.ts";
 import Game from "../../Game.ts";
+import GameStates from "../../components/singletons/GameStates.ts";
+import DefenseFactory from "../../managers/DefenseFactory.ts";
 
 export default class CreateDefenseHandler implements ISystem {
-    entityManger: EntityManager;
+    entityManager: EntityManager;
     eventManager: EventManager;
 
     constructor() {
-        this.entityManger = EntityManager.getInstance();
+        this.entityManager = EntityManager.getInstance();
         this.eventManager = EventManager.getInstance();
         this.subscribeToEvents();
     }
 
     subscribeToEvents(): void {
-        this.eventManager.subscribe("OnNewEntity", this.OnNewEntity.bind(this));
-    }
-
-    OnNewEntity(entity: Entity): void {
-        if (entity.hasComponents(["Click", "Tag"])) {
-            const tagComponent: Tag = entity.getComponent("Tag") as Tag;
-            const clickComponent: Click = entity.getComponent("Click") as Click;
-
-            if (tagComponent.tag !== "buttonCreateDefense") {
-                return;
-            }
-
-            clickComponent.onPointerDown.push(this.createDefense.bind(this));
-        }
+        this.eventManager.subscribe("OnCreateDefense", this.OnCreateDefense.bind(this));
     }
 
     update(deltaTime: number): void {}
 
-    createDefense(): void {
-        // defense
-        const defense: Entity = new Entity();
-        defense.addComponent(new Transform(defense, new Vector2(200, 100)));
-        let defenseSprite: PIXI.Sprite = PIXI.Sprite.from("img/defense.png");
-        defenseSprite.zIndex = SpriteLayer.FOREGROUND;
-        defense.addComponent(new Sprite(defense, defenseSprite, new Vector2(0.15, 0.15), new Vector2(0.5, 0.75)));
-        defense.addComponent(new Drag(defense));
-        defense.addComponent(new Tag(defense, "defense"));
-        defense.addComponent(new Defense(defense));
-        this.entityManger.addEntity(defense);
+    OnCreateDefense(type: string): void {
+        const defenseData: IDefense = getDefenseData(type);
+        if (!this.checkCanCreateDefense(defenseData)) {
+            this.eventManager.notify("OnDisplayErrorMessage", "Not enough golds");
+            return;
+        }
 
-        // defense base
-        const defenseBase: Entity = new Entity();
-        defenseBase.addComponent(new Transform(defenseBase, new Vector2(0, 0)));
-        let defenseBaseSprite: PIXI.Sprite = PIXI.Sprite.from("img/baseDefense.png");
-        defenseBaseSprite.zIndex = SpriteLayer.DEFAULT;
-        defenseBase.addComponent(new Sprite(defenseBase, defenseBaseSprite, new Vector2(0.15, 0.15)));
-        defenseBase.addComponent(new LinkTransform(defenseBase, defense.id, new Vector2(0, 0)));
-        this.entityManger.addEntity(defenseBase);
+        this.createDefense(defenseData);
+    }
+
+    checkCanCreateDefense(defenseType: IDefense): boolean {
+        const gameStatesComponent: GameStates = GameStates.getInstance();
+        if (gameStatesComponent.golds < defenseType.price) {
+            return false;
+        }
+        return true;
+    }
+
+    createDefense(defenseData: IDefense): void {
+        const defenseFactory: DefenseFactory = DefenseFactory.getInstance();
+        const defense: Entity = defenseFactory.createDefense(defenseData);
+        this.entityManager.addEntity(defense);
+
+        const defenseBase: Entity = defenseFactory.createDefenseBase(defense);
+        this.entityManager.addEntity(defenseBase);
 
         this.createValidationButton(defense);
 
@@ -95,18 +88,19 @@ export default class CreateDefenseHandler implements ISystem {
         defenseValidateButton.addComponent(
             new Sprite(
                 defenseValidateButton,
-                buttonSprite,
-                new Vector2(0.015, 0.03)
+                buttonSprite
             ),
         );
         defenseValidateButton.addComponent(
-            new LinkTransform(
+            new Parent(
                 defenseValidateButton,
-                defense.id,
+                defense,
+                true,
+                false,
                 new Vector2(0, -70)
             )
         );
         defenseValidateButton.addComponent(new Click(defenseValidateButton));
-        this.entityManger.addEntity(defenseValidateButton);
+        this.entityManager.addEntity(defenseValidateButton);
     }
 }

@@ -1,5 +1,5 @@
 import {Entity, ISystem} from "../../ecsModels.ts";
-import EventManager from "../../EventManager.ts";
+import EventManager from "../../managers/EventManager.ts";
 
 // components
 import Sprite from "../../components/core/Sprite.ts";
@@ -26,12 +26,18 @@ export default class ClickHandler implements ISystem {
             spriteComponent.sprite.cursor = 'pointer';
 
             spriteComponent.sprite.on('pointerdown', (): void => {
+                if (!clickComponent.isEnable) {
+                    return;
+                }
                 clickComponent.onPointerDown.forEach((listener: Function): void => {
                     listener();
                 });
             });
 
             spriteComponent.sprite.on('pointerup', (): void => {
+                if (!clickComponent.isEnable) {
+                    return;
+                }
                 clickComponent.onPointerUp.forEach((listener: Function): void => {
                     listener();
                 });

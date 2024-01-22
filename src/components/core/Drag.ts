@@ -6,12 +6,14 @@ export default class Drag implements IComponent {
 
     isDragged: boolean = false;
     onPointerMove: Function[] = [];
+    onPointerUp: Function[] = [];
+    isEnable: boolean;
 
     constructor(
-        entity: Entity
+        entity: Entity,
+        isEnable: boolean = true
     ) {
         this.entity = entity;
+        this.isEnable = isEnable;
     }
-
-    destroy(): void {}
 }

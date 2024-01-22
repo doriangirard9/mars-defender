@@ -1,0 +1,116 @@
+{
+  "cannon": {
+    "name": "cannon",
+    "range": 150,
+    "damage": 20,
+    "fireRate": 1,
+    "price": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.75
+    },
+    "upgrade": "cannon2",
+    "sound": "audio/sniperSound.wav",
+    "firePoint": 30,
+    "laser": {
+      "muzzleFlash": "img/muzzleFlash/muzzleFlash1.png",
+      "width": 1
+    },
+    "sprite": "img/defenses/cannon.png"
+  },
+  "cannon2": {
+    "name": "cannon2",
+    "range": 150,
+    "damage": 40,
+    "fireRate": 1,
+    "price": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.65
+    },
+    "upgrade": "none",
+    "sound": "audio/sniperSound.wav",
+    "firePoint": 30,
+    "laser": {
+      "muzzleFlash": "img/muzzleFlash/muzzleFlash1.png",
+      "width": 2
+    },
+    "sprite": "img/defenses/cannon2.png"
+  },
+  "machineGun": {
+    "name": "machineGun",
+    "range": 80,
+    "damage": 4,
+    "fireRate": 0.1,
+    "price": 100,
+    "firePoint": 25,
+    "anchor": {
+      "x": 0.7,
+      "y": 0.75
+    },
+    "upgrade": "machineGun2",
+    "sound": "audio/sniperSound.wav",
+    "laser": {
+      "muzzleFlash": "img/muzzleFlash/muzzleFlash2.png",
+      "width": 1
+    },
+    "sprite": "img/defenses/machineGun.png"
+  },
+  "machineGun2": {
+    "name": "machineGun2",
+    "range": 90,
+    "damage": 5,
+    "fireRate": 0.05,
+    "price": 100,
+    "firePoint": 28,
+    "anchor": {
+      "x": 0.7,
+      "y": 0.75
+    },
+    "upgrade": "none",
+    "sound": "audio/sniperSound.wav",
+    "laser": {
+      "muzzleFlash": "img/muzzleFlash/muzzleFlash2.png",
+      "width": 1
+    },
+    "sprite": "img/defenses/machineGun2.png"
+  },
+  "missileLauncher": {
+    "name": "missileLauncher",
+    "range": 250,
+    "damage": 50,
+    "fireRate": 2,
+    "price": 200,
+    "firePoint": 15,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "upgrade": "missileLauncher2",
+    "sound": "audio/sniperSound.wav",
+    "laser": {
+      "muzzleFlash": "img/muzzleFlash/muzzleFlash3.png",
+      "width": 2.5
+    },
+    "sprite": "img/defenses/missileLauncher.png"
+  },
+  "missileLauncher2": {
+    "name": "missileLauncher2",
+    "range": 250,
+    "damage": 100,
+    "fireRate": 2,
+    "price": 100,
+    "firePoint": 15,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "upgrade": "none",
+    "sound": "audio/sniperSound.wav",
+    "laser": {
+      "muzzleFlash": "img/muzzleFlash/muzzleFlash3.png",
+      "width": 2.5
+    },
+    "sprite": "img/defenses/missileLauncher2.png"
+  }
+}

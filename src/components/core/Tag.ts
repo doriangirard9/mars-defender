@@ -13,6 +13,4 @@ export default class Tag implements IComponent {
         this.entity = entity;
         this.tag = tag;
     }
-
-    destroy(): void {}
 }

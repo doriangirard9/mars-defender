@@ -3,7 +3,7 @@ import {Entity, ISystem} from "../../ecsModels.ts";
 // components
 import Sprite from "../../components/core/Sprite.ts";
 import Drag from "../../components/core/Drag.ts";
-import EventManager from "../../EventManager.ts";
+import EventManager from "../../managers/EventManager.ts";
 
 export default class DragHandler implements ISystem {
     eventManager: EventManager;
@@ -26,19 +26,34 @@ export default class DragHandler implements ISystem {
             spriteComponent.sprite.cursor = 'pointer';
 
             spriteComponent.sprite.on('pointerdown', (): void => {
+                if (!dragComponent.isEnable) {
+                    return;
+                }
                 dragComponent.isDragged = true;
             });
 
             spriteComponent.sprite.on('pointerup', (): void => {
+                if (!dragComponent.isEnable) {
+                    return;
+                }
+                dragComponent.onPointerUp.forEach((listener: Function): void => {
+                    listener();
+                });
                 dragComponent.isDragged = false;
             });
 
             spriteComponent.sprite.on('pointerupoutside', (): void => {
+                if (!dragComponent.isEnable) {
+                    return;
+                }
+                dragComponent.onPointerUp.forEach((listener: Function): void => {
+                    listener();
+                });
                 dragComponent.isDragged = false;
             });
 
             spriteComponent.sprite.on('globalpointermove', (event: any): void => {
-                if (!dragComponent.isDragged) {
+                if (!dragComponent.isDragged || !dragComponent.isEnable) {
                     return;
                 }
                 dragComponent.onPointerMove.forEach((listener: Function): void => {

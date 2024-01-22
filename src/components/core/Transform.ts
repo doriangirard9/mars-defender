@@ -17,6 +17,4 @@ export default class Transform implements IComponent {
         this.position = position;
         this.rotation = rotation;
     }
-
-    destroy(): void {}
 }

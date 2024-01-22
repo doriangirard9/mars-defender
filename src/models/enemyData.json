@@ -1,0 +1,34 @@
+{
+  "basic": {
+    "name": "basic",
+    "damage": 10,
+    "speed": 50,
+    "health": 100,
+    "reward": 10,
+    "sprite": "img/enemies/basic.png"
+  },
+  "fast": {
+      "name": "fast",
+      "damage": 10,
+      "speed": 100,
+      "health": 100,
+      "reward": 10,
+      "sprite": "img/enemies/fast.png"
+  },
+  "strong": {
+      "name": "strong",
+      "damage": 20,
+      "speed": 60,
+      "health": 200,
+      "reward": 10,
+      "sprite": "img/enemies/strong.png"
+  },
+  "tank": {
+      "name": "tank",
+      "damage": 10,
+      "speed": 40,
+      "health": 500,
+      "reward": 10,
+      "sprite": "img/enemies/tank.png"
+  }
+}

@@ -5,13 +5,15 @@ export default class Click implements IComponent {
     name: string = "Click";
 
     onPointerDown: Function[] = [];
+    onGlobalPointerDown: Function[] = [];
     onPointerUp: Function[] = [];
+    isEnable: boolean;
 
     constructor(
-        entity: Entity
+        entity: Entity,
+        isEnable: boolean = true
     ) {
         this.entity = entity;
+        this.isEnable = isEnable;
     }
-
-    destroy(): void {}
 }
