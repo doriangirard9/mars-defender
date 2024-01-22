@@ -77,7 +77,7 @@ export default class Game {
         new Howl({
             src: ["audio/backgroundMusic.wav"],
             loop: true,
-            volume: 0.1
+            volume: 0.05
         }).play();
 
         this.createApp();
@@ -118,11 +118,11 @@ export default class Game {
         this.eventManager.subscribe("OnGameOver", this.OnGameOver.bind(this));
 
         const entity: Entity = new Entity();
-        entity.addComponent(new Transform(entity, new Vector2(0, 0)));
+        entity.addComponent(new Transform(entity, new Vector2(-300, 0)));
         const backgroundSprite: Sprite = new SpriteBuilder()
             .addEntity(entity)
-            .addSprite(PIXI.Sprite.from("img/marsGround.png"))
-            .addScale(new Vector2(3.71, 2.75))
+            .addSprite(PIXI.Sprite.from("img/marsBackground.jpeg"))
+            .addScale(new Vector2(4, 3))
             .addAnchor(new Vector2(0, 0))
             .build();
         entity.addComponent(backgroundSprite);
@@ -144,6 +144,16 @@ export default class Game {
                     );
                     tileGraphics.endFill();
                 }
+                else {
+                    tileGraphics.beginFill(0x000000, 0.2);
+                    tileGraphics.drawRect(
+                        colIndex * gameStatesComponent.tileSize,
+                        rowIndex * gameStatesComponent.tileSize,
+                        gameStatesComponent.tileSize,
+                        gameStatesComponent.tileSize
+                    );
+                    tileGraphics.endFill();
+                }
             });
         });
         tile.addComponent(new Shape(tile, tileGraphics));
@@ -151,7 +161,7 @@ export default class Game {
 
         // create gold panel
         const goldPanel: Entity = new Entity();
-        goldPanel.addComponent(new Transform(goldPanel, new Vector2(890, 30)));
+        goldPanel.addComponent(new Transform(goldPanel, new Vector2(1080, 30)));
         goldPanel.addComponent(
             new Sprite(
                 goldPanel,
@@ -163,7 +173,7 @@ export default class Game {
 
         // create gold icon
         const goldIcon: Entity = new Entity();
-        goldIcon.addComponent(new Transform(goldIcon, new Vector2(860, 30)));
+        goldIcon.addComponent(new Transform(goldIcon, new Vector2(1050, 30)));
         goldIcon.addComponent(
             new Sprite(
                 goldIcon,
@@ -175,14 +185,14 @@ export default class Game {
 
         // create gold text
         const goldText: Entity = new Entity();
-        goldText.addComponent(new Transform(goldText, new Vector2(900, 30)));
+        goldText.addComponent(new Transform(goldText, new Vector2(1090, 30)));
         goldText.addComponent(new Text(goldText, new PIXI.Text("0"), new Vector2(0.7, 0.7)));
         goldText.addComponent(new Tag(goldText, "goldText"));
         this.entityManager.addEntity(goldText);
 
         // create health panel
         const healthPanel: Entity = new Entity();
-        healthPanel.addComponent(new Transform(healthPanel, new Vector2(890, 80)));
+        healthPanel.addComponent(new Transform(healthPanel, new Vector2(1080, 80)));
         healthPanel.addComponent(
             new Sprite(
                 healthPanel,
@@ -194,7 +204,7 @@ export default class Game {
 
         // create health icon
         const healthIcon: Entity = new Entity();
-        healthIcon.addComponent(new Transform(healthIcon, new Vector2(860, 80)));
+        healthIcon.addComponent(new Transform(healthIcon, new Vector2(1050, 80)));
         healthIcon.addComponent(
             new Sprite(
                 healthIcon,
@@ -206,7 +216,7 @@ export default class Game {
 
         // create health text
         const healthText: Entity = new Entity();
-        healthText.addComponent(new Transform(healthText, new Vector2(900, 80)));
+        healthText.addComponent(new Transform(healthText, new Vector2(1090, 80)));
         healthText.addComponent(new Text(healthText, new PIXI.Text("100"), new Vector2(0.7, 0.7)));
         healthText.addComponent(new Health(healthText, 100));
         healthText.addComponent(new Tag(healthText, "gameHealth"));
@@ -214,7 +224,7 @@ export default class Game {
 
         // create wave panel
         const wavePanel: Entity = new Entity();
-        wavePanel.addComponent(new Transform(wavePanel, new Vector2(890, 130)));
+        wavePanel.addComponent(new Transform(wavePanel, new Vector2(1080, 130)));
         wavePanel.addComponent(
             new Sprite(
                 wavePanel,
@@ -226,7 +236,7 @@ export default class Game {
 
         // create wave icon
         const waveIcon: Entity = new Entity();
-        waveIcon.addComponent(new Transform(waveIcon, new Vector2(860, 130)));
+        waveIcon.addComponent(new Transform(waveIcon, new Vector2(1050, 130)));
         waveIcon.addComponent(
             new Sprite(
                 waveIcon,
@@ -238,18 +248,18 @@ export default class Game {
 
         // create wave text
         const waveText: Entity = new Entity();
-        waveText.addComponent(new Transform(waveText, new Vector2(900, 130)));
+        waveText.addComponent(new Transform(waveText, new Vector2(1090, 130)));
         waveText.addComponent(new Text(waveText, new PIXI.Text("0"), new Vector2(0.7, 0.7)));
         waveText.addComponent(new Tag(waveText, "waveText"));
         this.entityManager.addEntity(waveText);
 
         // create defense button
         const defenseButton: Entity = new Entity();
-        defenseButton.addComponent(new Transform(defenseButton, new Vector2(65, 30)));
-        defenseButton.addComponent(new Sprite(defenseButton, PIXI.Sprite.from("img/button.png")));
+        defenseButton.addComponent(new Transform(defenseButton, new Vector2(70, 30)));
+        defenseButton.addComponent(new Sprite(defenseButton, PIXI.Sprite.from("img/button.png"), new Vector2(1.1, 1.2)));
         defenseButton.addComponent(new Click(defenseButton));
         defenseButton.addComponent(new Tag(defenseButton, "buttonCreateDefense"));
-        defenseButton.addComponent(new Text(defenseButton, new PIXI.Text("Create defense"), new Vector2(0.5, 0.5)));
+        defenseButton.addComponent(new Text(defenseButton, new PIXI.Text("Create defense"), new Vector2(0.6, 0.6)));
         this.entityManager.addEntity(defenseButton);
 
         setTimeout((): void => {
