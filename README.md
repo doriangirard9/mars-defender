@@ -1,5 +1,8 @@
 # mars-defender
-A tower defense game created as part of a university project
+A tower defense game created as part of a university project.
+
+# How to play
+You can play the game [here](https://doori4n.github.io/mars-defender/)
 
 ## Assets
 - ["Tower Defence Basic Towers" by Nido licensed CC0](https://opengameart.org/node/114170)
