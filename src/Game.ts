@@ -50,6 +50,8 @@ import HoverDefenseHandler from "./systems/defense/HoverDefenseHandler.ts";
 import CreateDefenseButtonHandler from "./systems/gameStates/CreateDefenseButtonHandler.ts";
 import UpgradeDefenseHandler from "./systems/defense/UpgradeDefenseHandler.ts";
 import PortalHandler from "./systems/gameStates/PortalHandler.ts";
+import Parent from "./components/core/Parent.ts";
+import Children from "./components/core/Children.ts";
 
 export default class Game {
     private static instance: Game;
@@ -78,7 +80,7 @@ export default class Game {
         new Howl({
             src: ["audio/backgroundMusic.wav"],
             loop: true,
-            volume: 0.03
+            volume: 0.1
         }).play();
 
         this.createApp();
@@ -187,6 +189,7 @@ export default class Game {
             gameStatesComponent.base.x * gameStatesComponent.tileSize + gameStatesComponent.tileSize / 2
         );
         base.addComponent(new Transform(base, basePosition));
+        base.addComponent(new Children(base));
         const baseSprite: Sprite = new SpriteBuilder()
             .addEntity(base)
             .addSprite(PIXI.Sprite.from("img/dome.png"))
@@ -195,6 +198,13 @@ export default class Game {
             .build();
         base.addComponent(baseSprite);
         this.entityManager.addEntity(base);
+
+        // create base text
+        const baseText: Entity = new Entity();
+        baseText.addComponent(new Transform(baseText, new Vector2(0, 0)));
+        baseText.addComponent(new Parent(baseText, base, true, false, new Vector2(0, -40)))
+        baseText.addComponent(new Text(baseText, new PIXI.Text("Base"), new Vector2(0.7, 0.7)));
+        this.entityManager.addEntity(baseText);
 
         // create gold panel
         const goldPanel: Entity = new Entity();

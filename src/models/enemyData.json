@@ -11,15 +11,15 @@
       "name": "fast",
       "damage": 10,
       "speed": 100,
-      "health": 100,
+      "health": 80,
       "reward": 10,
       "sprite": "img/enemies/fast.png"
   },
   "strong": {
       "name": "strong",
-      "damage": 20,
+      "damage": 10,
       "speed": 60,
-      "health": 200,
+      "health": 150,
       "reward": 10,
       "sprite": "img/enemies/strong.png"
   },
@@ -27,7 +27,7 @@
       "name": "tank",
       "damage": 10,
       "speed": 40,
-      "health": 500,
+      "health": 300,
       "reward": 10,
       "sprite": "img/enemies/tank.png"
   }

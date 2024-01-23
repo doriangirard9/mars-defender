@@ -23,7 +23,7 @@
     "range": 150,
     "damage": 40,
     "fireRate": 1,
-    "price": 100,
+    "price": 400,
     "anchor": {
       "x": 0.5,
       "y": 0.65
@@ -39,7 +39,7 @@
   },
   "machineGun": {
     "name": "machineGun",
-    "range": 80,
+    "range": 90,
     "damage": 4,
     "fireRate": 0.1,
     "price": 100,
@@ -61,7 +61,7 @@
     "range": 90,
     "damage": 5,
     "fireRate": 0.05,
-    "price": 100,
+    "price": 400,
     "firePoint": 28,
     "anchor": {
       "x": 0.7,
@@ -99,7 +99,7 @@
     "range": 250,
     "damage": 100,
     "fireRate": 2,
-    "price": 100,
+    "price": 500,
     "firePoint": 15,
     "anchor": {
       "x": 0.5,

@@ -4,7 +4,8 @@ import EventManager from "../../managers/EventManager.ts";
 import SpriteBuilder from "../../managers/SpriteBuilder.ts";
 import Vector2 from "../../utils/Vector2.ts";
 import * as PIXI from "pixi.js";
-import {SpriteLayer} from "../../models/models.ts";
+import {IDefense, SpriteLayer} from "../../models/models.ts";
+import {getDefenseData} from "../../models/models.ts";
 
 // components
 import Tag from "../../components/core/Tag.ts";
@@ -13,6 +14,7 @@ import Transform from "../../components/core/Transform.ts";
 import Sprite from "../../components/core/Sprite.ts";
 import Children from "../../components/core/Children.ts";
 import Parent from "../../components/core/Parent.ts";
+import Text from "../../components/core/Text.ts";
 
 export default class CreateDefenseButtonHandler implements ISystem {
     entityManager: EntityManager;
@@ -132,6 +134,14 @@ export default class CreateDefenseButtonHandler implements ISystem {
             )
         );
 
+        // create defense text
+        const defenseText: Entity = new Entity();
+        defenseText.addComponent(new Transform(defenseText));
+        defenseText.addComponent(new Parent(defenseText, spriteContainer, true, false, new Vector2(65, 95)));
+        const defenseData: IDefense = getDefenseData("cannon");
+        defenseText.addComponent(new Text(defenseText, new PIXI.Text(defenseData.price), new Vector2(0.7, 0.7)));
+        this.entityManager.addEntity(defenseText);
+
         const defenseSpriteSprite: Sprite = new SpriteBuilder()
             .addSprite(PIXI.Sprite.from("img/defenses/cannon.png"))
             .addEntity(defenseSprite)
@@ -141,6 +151,13 @@ export default class CreateDefenseButtonHandler implements ISystem {
             .build();
         defenseSprite.addComponent(defenseSpriteSprite);
         this.entityManager.addEntity(defenseSprite);
+
+        // create dollar icon
+        const dollarIcon: Entity = new Entity();
+        dollarIcon.addComponent(new Transform(dollarIcon));
+        dollarIcon.addComponent(new Parent(dollarIcon, spriteContainer, true, false, new Vector2(40, 95)));
+        dollarIcon.addComponent(new Sprite(dollarIcon, PIXI.Sprite.from("img/coins.png"), new Vector2(0.5, 0.5)));
+        this.entityManager.addEntity(dollarIcon);
 
         // create second sprite container
         const spriteContainer2: Entity = new Entity();
@@ -183,6 +200,21 @@ export default class CreateDefenseButtonHandler implements ISystem {
                 new Vector2(60, 58)
             )
         );
+
+        // create dollar icon 2
+        const dollarIcon2: Entity = new Entity();
+        dollarIcon2.addComponent(new Transform(dollarIcon2));
+        dollarIcon2.addComponent(new Parent(dollarIcon2, spriteContainer2, true, false, new Vector2(40, 95)));
+        dollarIcon2.addComponent(new Sprite(dollarIcon2, PIXI.Sprite.from("img/coins.png"), new Vector2(0.5, 0.5)));
+        this.entityManager.addEntity(dollarIcon2);
+
+        // create defense text 2
+        const defenseText2: Entity = new Entity();
+        defenseText2.addComponent(new Transform(defenseText2));
+        defenseText2.addComponent(new Parent(defenseText2, spriteContainer2, true, false, new Vector2(65, 95)));
+        const defenseData2: IDefense = getDefenseData("machineGun");
+        defenseText2.addComponent(new Text(defenseText2, new PIXI.Text(defenseData2.price), new Vector2(0.7, 0.7)));
+        this.entityManager.addEntity(defenseText2);
 
         const defenseSpriteSprite2: Sprite = new SpriteBuilder()
             .addSprite(PIXI.Sprite.from("img/defenses/machineGun.png"))
@@ -236,6 +268,13 @@ export default class CreateDefenseButtonHandler implements ISystem {
             )
         );
 
+        // create dollar icon 3
+        const dollarIcon3: Entity = new Entity();
+        dollarIcon3.addComponent(new Transform(dollarIcon3));
+        dollarIcon3.addComponent(new Parent(dollarIcon3, spriteContainer3, true, false, new Vector2(40, 95)));
+        dollarIcon3.addComponent(new Sprite(dollarIcon3, PIXI.Sprite.from("img/coins.png"), new Vector2(0.5, 0.5)));
+        this.entityManager.addEntity(dollarIcon3);
+
         const defenseSpriteSprite3: Sprite = new SpriteBuilder()
             .addSprite(PIXI.Sprite.from("img/defenses/missileLauncher.png"))
             .addEntity(defenseSprite3)
@@ -245,6 +284,14 @@ export default class CreateDefenseButtonHandler implements ISystem {
             .build();
         defenseSprite3.addComponent(defenseSpriteSprite3);
         this.entityManager.addEntity(defenseSprite3);
+
+        // create defense text 3
+        const defenseText3: Entity = new Entity();
+        defenseText3.addComponent(new Transform(defenseText3));
+        defenseText3.addComponent(new Parent(defenseText3, spriteContainer3, true, false, new Vector2(65, 95)));
+        const defenseData3: IDefense = getDefenseData("missileLauncher");
+        defenseText3.addComponent(new Text(defenseText3, new PIXI.Text(defenseData3.price), new Vector2(0.7, 0.7)));
+        this.entityManager.addEntity(defenseText3);
     }
 
     update(deltaTime: number): void {}
