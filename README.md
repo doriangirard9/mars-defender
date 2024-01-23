@@ -27,6 +27,6 @@ That's it ! You can now play the game on this [link](http://localhost:5173/)
 ## Assets
 - ["Tower Defence Basic Towers" by Nido licensed CC0](https://opengameart.org/node/114170)
 - ["Free UI Hologram Interface" by Wenrexa licensed CC0](https://opengameart.org/content/free-ui-hologram-interface)
-- https://opengameart.org/content/minimalist-bar-system-0
-- https://opengameart.org/content/16-toon-muzzle-flash
-- https://opengameart.org/content/sci-fi-effects
+- ["Minimalist Bar System" by ChaosRobH licensed CC0](https://opengameart.org/content/minimalist-bar-system-0)
+- ["16 Toon Muzzle flash" by zisongbr licensed CC0](https://opengameart.org/content/16-toon-muzzle-flash)
+- ["Sci-fi effects" by Skorpio licensed CC-BY 3.0 / GPL 3.0](https://opengameart.org/content/sci-fi-effects)
