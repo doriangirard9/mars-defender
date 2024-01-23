@@ -311,7 +311,7 @@ export default class Game {
 
         setTimeout((): void => {
             this.eventManager.notify("OnWaveStart");
-        }, 2000);
+        }, 5000);
 
         requestAnimationFrame(this.update.bind(this));
     }
