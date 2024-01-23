@@ -1,5 +1,9 @@
 # mars-defender
-A tower defense game created as part of a university project.
+This is a tower defense game created as part of a university project.
+
+In this game, you must defend your base by placing turrets to stop waves of enemy spaceships.
+
+The waves are endless, so you need to survive as long as possible !
 
 # How to play
 You can play the game [here](https://doori4n.github.io/mars-defender/)
