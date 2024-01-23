@@ -19,13 +19,13 @@ export default class EnemyFactory {
     private constructor() {}
 
     createEnemy(random: number): Entity {
-        if (random <= 0.5) {
+        if (random <= 0.55) {
             return this.createEnemyFromData(_enemyData.basic);
         }
-        else if (random <= 0.7) {
+        else if (random <= 0.70) {
             return this.createEnemyFromData(_enemyData.tank);
         }
-        else if (random <= 0.85) {
+        else if (random <= 0.80) {
             return this.createEnemyFromData(_enemyData.fast);
         }
         else {

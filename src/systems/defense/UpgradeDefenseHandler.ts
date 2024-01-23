@@ -8,6 +8,12 @@ import DefenseFactory from "../../managers/DefenseFactory.ts";
 import Defense from "../../components/Defense.ts";
 import GameStates from "../../components/singletons/GameStates.ts";
 import Game from "../../Game.ts";
+import Transform from "../../components/core/Transform.ts";
+import LifeSpan from "../../components/core/LifeSpan.ts";
+import * as PIXI from "pixi.js";
+import Sprite from "../../components/core/Sprite.ts";
+import SpriteBuilder from "../../managers/SpriteBuilder.ts";
+import Vector2 from "../../utils/Vector2.ts";
 
 export default class UpgradeDefenseHandler implements ISystem {
     entityManager: EntityManager;
@@ -55,7 +61,32 @@ export default class UpgradeDefenseHandler implements ISystem {
         const defenseBase: Entity = defenseFactory.createDefenseBase(newDefense);
         this.entityManager.addEntity(defenseBase);
 
+        this.createAnimation(newDefense);
+
         Game.getInstance().app.stage.sortChildren();
+    }
+
+    createAnimation(defense: Entity): void {
+        const defenseTransformComponent: Transform = defense.getComponent("Transform") as Transform;
+
+        const animation: Entity = new Entity();
+        animation.addComponent(new Transform(animation, defenseTransformComponent.position));
+        animation.addComponent(new LifeSpan(animation, 500));
+        let frames: string[] = [];
+        for (let i: number = 0; i < 20; i++) {
+            frames.push(`img/animations/shield2/${i}.png`);
+        }
+        let animationSprite: PIXI.AnimatedSprite = PIXI.AnimatedSprite.fromFrames(frames);
+        animationSprite.animationSpeed = 0.2;
+        const sprite: Sprite = new SpriteBuilder()
+            .addSprite(animationSprite)
+            .addEntity(animation)
+            .addAnchor(new Vector2(0.5, 0.5))
+            .addScale(new Vector2(0.2, 0.2))
+            .build();
+        animation.addComponent(sprite);
+        this.entityManager.addEntity(animation);
+        animationSprite.play();
     }
 
     update(deltaTime: number): void {}

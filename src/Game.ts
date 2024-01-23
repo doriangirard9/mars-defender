@@ -49,6 +49,7 @@ import WaveTextHandler from "./systems/gameStates/WaveTextHandler.ts";
 import HoverDefenseHandler from "./systems/defense/HoverDefenseHandler.ts";
 import CreateDefenseButtonHandler from "./systems/gameStates/CreateDefenseButtonHandler.ts";
 import UpgradeDefenseHandler from "./systems/defense/UpgradeDefenseHandler.ts";
+import PortalHandler from "./systems/gameStates/PortalHandler.ts";
 
 export default class Game {
     private static instance: Game;
@@ -77,7 +78,7 @@ export default class Game {
         new Howl({
             src: ["audio/backgroundMusic.wav"],
             loop: true,
-            volume: 0.05
+            volume: 0.03
         }).play();
 
         this.createApp();
@@ -112,6 +113,7 @@ export default class Game {
         this.systems.push(new HoverDefenseHandler());
         this.systems.push(new CreateDefenseButtonHandler());
         this.systems.push(new UpgradeDefenseHandler());
+        this.systems.push(new PortalHandler());
 
         this.initScene();
 
@@ -158,6 +160,41 @@ export default class Game {
         });
         tile.addComponent(new Shape(tile, tileGraphics));
         this.entityManager.addEntity(tile);
+
+        // create portals
+        gameStatesComponent.spawns.forEach((spawn: Vector2): void => {
+            const portal: Entity = new Entity();
+            const portalPosition: Vector2 = new Vector2(
+                spawn.y * gameStatesComponent.tileSize + gameStatesComponent.tileSize / 2,
+                spawn.x * gameStatesComponent.tileSize + gameStatesComponent.tileSize / 2
+            );
+            portal.addComponent(new Transform(portal, portalPosition));
+            portal.addComponent(new Tag(portal, "portal"));
+            const portalSprite: Sprite = new SpriteBuilder()
+                .addEntity(portal)
+                .addSprite(PIXI.Sprite.from("img/portal.png"))
+                .addScale(new Vector2(0.2, 0.2))
+                .addAnchor(new Vector2(0.5, 0.5))
+                .build();
+            portal.addComponent(portalSprite);
+            this.entityManager.addEntity(portal);
+        });
+
+        // create base
+        const base: Entity = new Entity();
+        const basePosition: Vector2 = new Vector2(
+            gameStatesComponent.base.y * gameStatesComponent.tileSize + gameStatesComponent.tileSize / 2,
+            gameStatesComponent.base.x * gameStatesComponent.tileSize + gameStatesComponent.tileSize / 2
+        );
+        base.addComponent(new Transform(base, basePosition));
+        const baseSprite: Sprite = new SpriteBuilder()
+            .addEntity(base)
+            .addSprite(PIXI.Sprite.from("img/dome.png"))
+            .addScale(new Vector2(0.15, 0.2))
+            .addAnchor(new Vector2(0.5, 0.5))
+            .build();
+        base.addComponent(baseSprite);
+        this.entityManager.addEntity(base);
 
         // create gold panel
         const goldPanel: Entity = new Entity();

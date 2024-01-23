@@ -32,10 +32,11 @@ export default class DisplayMessageHandler implements ISystem {
 
     displayMessage(message: string, color: string, lifeSpan: number): void {
         const messageEntity: Entity = new Entity();
-        messageEntity.addComponent(new Transform(messageEntity, new Vector2(475, 350)));
+        messageEntity.addComponent(new Transform(messageEntity, new Vector2(570, 390)));
         const sprite: Sprite = new SpriteBuilder()
             .addEntity(messageEntity)
             .addSprite(PIXI.Sprite.from("./img/container.png"))
+            .addAnchor(new Vector2(0.5, 0.5))
             .addScale(new Vector2(0.8, 0.3))
             .build();
         messageEntity.addComponent(sprite);

@@ -6,7 +6,7 @@ export default class Sprite implements IComponent {
     entity: Entity;
     name: string = "Sprite";
 
-    sprite: PIXI.Sprite;
+    sprite: PIXI.Sprite | PIXI.AnimatedSprite;
     scale: Vector2;
     anchor: Vector2;
     rotationOffset: number;

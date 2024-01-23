@@ -3,6 +3,7 @@ import * as PIXI from "pixi.js";
 import Game from "../../Game.ts";
 import EntityManager from "../../managers/EntityManager.ts";
 import EventManager from "../../managers/EventManager.ts";
+import SpriteBuilder from "../../managers/SpriteBuilder.ts";
 
 // components
 import Click from "../../components/core/Click.ts";
@@ -13,6 +14,9 @@ import Defense from "../../components/Defense.ts";
 import GameStates from "../../components/singletons/GameStates.ts";
 import Transform from "../../components/core/Transform.ts";
 import {getDefenseData, IDefense} from "../../models/models.ts";
+import Sprite from "../../components/core/Sprite.ts";
+import Vector2 from "../../utils/Vector2.ts";
+import LifeSpan from "../../components/core/LifeSpan.ts";
 
 export default class ValidateDefenseHandler implements ISystem {
     entityManager: EntityManager;
@@ -62,6 +66,7 @@ export default class ValidateDefenseHandler implements ISystem {
         const y: number = (defenseTransformComponent.position.y - gameStatesComponent.tileSize / 2) / gameStatesComponent.tileSize;
         gameStatesComponent.grid[y][x] = 2;
         this.validateDefense(entity, defense);
+        this.createAnimation(defense);
     }
 
     checkCanValidateDefense(transformComponent: Transform, gameStatesComponent: GameStates): boolean {
@@ -86,5 +91,28 @@ export default class ValidateDefenseHandler implements ISystem {
         defenseComponent.isPlaced = true;
 
         this.entityManager.removeEntity(entity);
+    }
+
+    createAnimation(defense: Entity): void {
+        const defenseTransformComponent: Transform = defense.getComponent("Transform") as Transform;
+
+        const animation: Entity = new Entity();
+        animation.addComponent(new Transform(animation, defenseTransformComponent.position));
+        animation.addComponent(new LifeSpan(animation, 500));
+        let frames: string[] = [];
+        for (let i: number = 0; i < 11; i++) {
+            frames.push(`img/animations/shield/0${i}.png`);
+        }
+        let animationSprite: PIXI.AnimatedSprite = PIXI.AnimatedSprite.fromFrames(frames);
+        animationSprite.animationSpeed = 0.2;
+        const sprite: Sprite = new SpriteBuilder()
+            .addSprite(animationSprite)
+            .addEntity(animation)
+            .addAnchor(new Vector2(0.5, 0.5))
+            .addScale(new Vector2(0.3, 0.3))
+            .build();
+        animation.addComponent(sprite);
+        this.entityManager.addEntity(animation);
+        animationSprite.play();
     }
 }
