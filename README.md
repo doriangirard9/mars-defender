@@ -1,9 +1,19 @@
 # mars-defender
 This is a tower defense game created as part of a university project.
 
-In this game, you must defend your base by placing turrets to stop waves of enemy spaceships.
-
+In this game, you must defend your base by placing turrets to stop waves of enemy spaceships. You can move defenses with drag and drop and upgrade them by clicking on them. Every time you kill an enemy you earn money.
 The waves are endless, so you need to survive as long as possible !
+
+There are 3 types of turrets : 
+- Red : a basic turret with medium range, fire rate and damage.
+- Green : a machine gun turret with low range, high fire rate and low damage.
+- Blue : a turret with high range and damage and low fire rate.
+
+There are 4 types of enemies : 
+- Red : a basic enemy with medium health and medium speed.
+- Purple : an enemy with high health and medium speed.
+- Blue : an enemy with high speed and low health.
+- Green : an enemy with high health and low speed.
 
 # How to play
 You can play the game [here](https://doori4n.github.io/mars-defender/)
