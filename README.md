@@ -16,7 +16,7 @@ There are 4 types of enemies :
 - Green : an enemy with high health and low speed.
 
 # How to play
-You can play the game [here](https://doori4n.github.io/mars-defender/)
+You can play the game [here](https://doriangirard9.github.io/mars-defender/)
 
 Or you can run it locally by cloning the repo.
 
